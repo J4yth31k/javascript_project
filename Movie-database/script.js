@@ -1,4 +1,4 @@
-const apiKey = "YOUR_API_KEY"; // Replace with your OMDB key
+const apiKey = "b99960a"; // Replace with your OMDB key
 const searchInput = document.getElementById("search-input");
 const searchBtn = document.getElementById("search-btn");
 const results = document.getElementById("results");
