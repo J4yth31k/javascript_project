@@ -8,7 +8,6 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header>
     <h1>Movie Search App</h1>
 
@@ -18,8 +17,18 @@
     </div>
   </header>
 
-  <!-- RESULTS GRID -->
   <section class="movies" id="results"></section>
+
+  <!-- Netflix-style modal -->
+  <div id="movie-modal" class="modal hidden">
+    <div class="modal-content">
+      <span id="close-modal">&times;</span>
+      <img id="modal-poster" />
+      <h2 id="modal-title"></h2>
+      <p id="modal-year"></p>
+      <p id="modal-plot"></p>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
