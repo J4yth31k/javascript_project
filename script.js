@@ -1,39 +1,88 @@
-const apiKey = "b99960a"; // Replace with your OMDB key
+const apiKey = "b99960a";
 const searchInput = document.getElementById("search-input");
 const searchBtn = document.getElementById("search-btn");
 const results = document.getElementById("results");
 
+// Fetch movies
 async function fetchMovies(searchTerm) {
-  results.innerHTML = `<div class="skeleton"></div>
-                       <div class="skeleton"></div>
-                       <div class="skeleton"></div>`;
+  results.innerHTML = `
+    <div class="movie skeleton"></div>
+    <div class="movie skeleton"></div>
+    <div class="movie skeleton"></div>
+  `;
 
   const res = await fetch(`https://www.omdbapi.com/?s=${searchTerm}&apikey=${apiKey}`);
   const data = await res.json();
 
   if (data.Response === "True") {
-    displayMovies(data.Search.slice(0, 6));
+    displayMovies(data.Search.slice(0, 8));
   } else {
     results.innerHTML = `<p>No results found.</p>`;
   }
 }
 
+// Create movie cards
 function displayMovies(movies) {
-  results.innerHTML = movies.map(movie => `
-    <div class="movie">
-      <img src="${movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/200x300"}" alt="${movie.Title}" />
-      <h3>${movie.Title}</h3>
-      <p>${movie.Year}</p>
-    </div>
-  `).join("");
+  results.innerHTML = movies
+    .map(
+      movie => `
+    <div class="movie" onclick="showMovieDetails('${movie.imdbID}')">
+      <img src="${
+        movie.Poster !== "N/A"
+          ? movie.Poster
+          : "https://via.placeholder.com/300x450"
+      }" alt="${movie.Title}" />
+      <div class="movie-info">
+        <h3>${movie.Title}</h3>
+        <p>${movie.Year}</p>
+      </div>
+    </div>`
+    )
+    .join("");
 }
 
+/* ------------------------------
+   MODAL (Movie details)
+------------------------------ */
+async function showMovieDetails(id) {
+  const res = await fetch(`https://www.omdbapi.com/?i=${id}&apikey=${apiKey}`);
+  const data = await res.json();
+
+  document.getElementById("modal-poster").src =
+    data.Poster !== "N/A" ? data.Poster : "https://via.placeholder.com/300x450";
+  document.getElementById("modal-title").innerText = data.Title;
+  document.getElementById("modal-year").innerText = data.Year;
+  document.getElementById("modal-plot").innerText = data.Plot;
+
+  document.getElementById("movie-modal").classList.remove("hidden");
+}
+
+// Close modal
+document.getElementById("close-modal").onclick = () =>
+  document.getElementById("movie-modal").classList.add("hidden");
+
+/* ------------------------------
+   Auto-search while typing
+------------------------------ */
+let typingTimer;
+
+searchInput.addEventListener("input", () => {
+  clearTimeout(typingTimer);
+  const term = searchInput.value.trim();
+
+  if (term.length >= 3) {
+    typingTimer = setTimeout(() => fetchMovies(term), 300);
+  }
+});
+
+/* Search button */
 searchBtn.addEventListener("click", () => {
   const term = searchInput.value.trim();
   if (term) fetchMovies(term);
 });
 
-searchInput.addEventListener("keypress", (e) => {
+/* Enter key */
+searchInput.addEventListener("keypress", e => {
   if (e.key === "Enter") {
     const term = searchInput.value.trim();
     if (term) fetchMovies(term);
