@@ -1,9 +1,13 @@
-const apiKey = "b99960a";
+const apiKey = "b99960a"; // your key
+
 const searchInput = document.getElementById("search-input");
 const searchBtn = document.getElementById("search-btn");
 const results = document.getElementById("results");
+const suggestionsBox = document.getElementById("suggestions");
 
-// Fetch movies
+/* ------------------------------
+   Fetch Movies
+------------------------------ */
 async function fetchMovies(searchTerm) {
   results.innerHTML = `
     <div class="movie skeleton"></div>
@@ -21,7 +25,9 @@ async function fetchMovies(searchTerm) {
   }
 }
 
-// Create movie cards
+/* ------------------------------
+   Display Movie Cards
+------------------------------ */
 function displayMovies(movies) {
   results.innerHTML = movies
     .map(
@@ -42,7 +48,7 @@ function displayMovies(movies) {
 }
 
 /* ------------------------------
-   MODAL (Movie details)
+   Movie Details (Modal)
 ------------------------------ */
 async function showMovieDetails(id) {
   const res = await fetch(`https://www.omdbapi.com/?i=${id}&apikey=${apiKey}`);
@@ -57,30 +63,51 @@ async function showMovieDetails(id) {
   document.getElementById("movie-modal").classList.remove("hidden");
 }
 
-// ------------------------------
-// MODAL CLOSE FIXES ADDED HERE
-// ------------------------------
-
-// tap / click outside modal closes it
+/* CLOSE MODAL */
 document.getElementById("movie-modal").addEventListener("click", (e) => {
   if (e.target.id === "movie-modal") {
     document.getElementById("movie-modal").classList.add("hidden");
   }
 });
 
-// universal close function
-const closeModal = () => {
+document.getElementById("close-modal").addEventListener("click", () => {
   document.getElementById("movie-modal").classList.add("hidden");
-};
-
-// close button (desktop click)
-document.getElementById("close-modal").addEventListener("click", closeModal);
-
-// close button (mobile tap)
-document.getElementById("close-modal").addEventListener("touchstart", closeModal);
+});
 
 /* ------------------------------
-   Auto-search while typing
+   Autocomplete Suggestions
+------------------------------ */
+async function showSuggestions(term) {
+  const res = await fetch(`https://www.omdbapi.com/?s=${term}&apikey=${apiKey}`);
+  const data = await res.json();
+
+  if (data.Response !== "True") {
+    suggestionsBox.style.display = "none";
+    return;
+  }
+
+  suggestionsBox.innerHTML = data.Search.slice(0, 5)
+    .map(movie => `
+      <div class="suggestion-item" data-title="${movie.Title}">
+        ${movie.Title} (${movie.Year})
+      </div>
+    `)
+    .join("");
+
+  suggestionsBox.style.display = "block";
+}
+
+suggestionsBox.addEventListener("click", (e) => {
+  if (e.target.classList.contains("suggestion-item")) {
+    const title = e.target.getAttribute("data-title");
+    searchInput.value = title;
+    suggestionsBox.style.display = "none";
+    fetchMovies(title);
+  }
+});
+
+/* ------------------------------
+   Input Typing Listener
 ------------------------------ */
 let typingTimer;
 
@@ -89,20 +116,26 @@ searchInput.addEventListener("input", () => {
   const term = searchInput.value.trim();
 
   if (term.length >= 3) {
-    typingTimer = setTimeout(() => fetchMovies(term), 300);
+    typingTimer = setTimeout(() => {
+      fetchMovies(term);
+      showSuggestions(term);
+    }, 300);
+  } else {
+    suggestionsBox.style.display = "none";
   }
 });
 
-/* Search button */
+/* SEARCH BUTTON */
 searchBtn.addEventListener("click", () => {
   const term = searchInput.value.trim();
   if (term) fetchMovies(term);
 });
 
-/* Enter key */
+/* ENTER KEY */
 searchInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
     const term = searchInput.value.trim();
     if (term) fetchMovies(term);
+    suggestionsBox.style.display = "none";
   }
 });
