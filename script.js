@@ -57,9 +57,17 @@ async function showMovieDetails(id) {
   document.getElementById("movie-modal").classList.remove("hidden");
 }
 
-// Close modal
-document.getElementById("close-modal").onclick = () =>
+// Close modal when clicking outside the content
+document.getElementById("movie-modal").addEventListener("click", (e) => {
+  if (e.target.id === "movie-modal") {
+    document.getElementById("movie-modal").classList.add("hidden");
+  }
+});
+
+// Improve mobile compatibility – register touchstart too
+document.getElementById("close-modal").addEventListener("touchstart", () => {
   document.getElementById("movie-modal").classList.add("hidden");
+});
 
 /* ------------------------------
    Auto-search while typing
