@@ -5,9 +5,6 @@ const searchBtn = document.getElementById("search-btn");
 const results = document.getElementById("results");
 const suggestionsBox = document.getElementById("suggestions");
 
-/* ------------------------------
-   Fetch Movies
------------------------------- */
 async function fetchMovies(searchTerm) {
   results.innerHTML = `
     <div class="movie skeleton"></div>
@@ -19,13 +16,17 @@ async function fetchMovies(searchTerm) {
   const data = await res.json();
 
   if (data.Response === "True") {
-    displayMovies(data.Search.slice(0, 8));
+
+    // ⭐ REQUIRED: sort movies alphabetically
+    data.Search.sort((a, b) => a.Title.localeCompare(b.Title));
+
+    // ⭐ REQUIRED: show only first 6
+    displayMovies(data.Search.slice(0, 6));
   } else {
     results.innerHTML = `<p>No results found.</p>`;
   }
-}
 
-/* ------------------------------
+--------
    Display Movie Cards
 ------------------------------ */
 function displayMovies(movies) {
