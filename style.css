@@ -34,12 +34,12 @@ header {
 }
 
 .movies {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* exactly three items per row */
+  gap: 20px;    /* keep the same gap */
   padding: 20px;
 }
+
 
 .movie {
   width: 180px;
