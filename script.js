@@ -16,35 +16,33 @@ async function fetchMovies(searchTerm) {
   const data = await res.json();
 
   if (data.Response === "True") {
-
-    // ⭐ REQUIRED: sort movies alphabetically
+    // sort movies alphabetically
     data.Search.sort((a, b) => a.Title.localeCompare(b.Title));
-
-    // ⭐ REQUIRED: show only first 6
+    // show only first 6
     displayMovies(data.Search.slice(0, 6));
   } else {
     results.innerHTML = `<p>No results found.</p>`;
   }
+}  // <-- this closes fetchMovies
 
 /* ------------------------------
    Display Movie Cards
 ------------------------------ */
 function displayMovies(movies) {
   results.innerHTML = movies
-    .map(
-      movie => `
-    <div class="movie" onclick="showMovieDetails('${movie.imdbID}')">
-      <img src="${
-        movie.Poster !== "N/A"
-          ? movie.Poster
-          : "https://via.placeholder.com/300x450"
-      }" alt="${movie.Title}" />
-      <div class="movie-info">
-        <h3>${movie.Title}</h3>
-        <p>${movie.Year}</p>
+    .map(movie => `
+      <div class="movie" onclick="showMovieDetails('${movie.imdbID}')">
+        <img src="${
+          movie.Poster !== "N/A"
+            ? movie.Poster
+            : "https://via.placeholder.com/300x450"
+        }" alt="${movie.Title}" />
+        <div class="movie-info">
+          <h3>${movie.Title}</h3>
+          <p>${movie.Year}</p>
+        </div>
       </div>
-    </div>`
-    )
+    `)
     .join("");
 }
 
