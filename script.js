@@ -127,7 +127,10 @@ searchInput.addEventListener("input", () => {
 /* SEARCH BUTTON */
 searchBtn.addEventListener("click", () => {
   const term = searchInput.value.trim();
-  if (term) fetchMovies(term);
+  if (term) {
+    fetchMovies(term);
+    suggestionsBox.style.display = "none";  // hide the suggestions dropdown
+  }
 });
 
 /* ENTER KEY */
