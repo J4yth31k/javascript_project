@@ -34,13 +34,13 @@ header {
 }
 
 .movies {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;          /* smaller space between cards */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;   /* adjust spacing as needed */
   padding: 20px;
-  max-width: 800px;   /* optional: limit total width */
-  margin: 0 auto;     /* center the grid container itself */
 }
+
 
 .movie {
   width: 180px;
