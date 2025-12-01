@@ -26,7 +26,7 @@ async function fetchMovies(searchTerm) {
     results.innerHTML = `<p>No results found.</p>`;
   }
 
---------
+/* ------------------------------
    Display Movie Cards
 ------------------------------ */
 function displayMovies(movies) {
