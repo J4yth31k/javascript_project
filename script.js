@@ -1,12 +1,13 @@
 const apiKey = "b99960a"; // your key
 
-const searchInput   = document.getElementById("search-input");
-const searchBtn     = document.getElementById("search-btn");
-const results       = document.getElementById("results");
-const suggestionsBox= document.getElementById("suggestions");
+const searchInput    = document.getElementById("search-input");
+const searchBtn      = document.getElementById("search-btn");
+const results        = document.getElementById("results");
+const suggestionsBox = document.getElementById("suggestions");
 
 /* --------------------------------
    Fetch movies from OMDb
+   (always newest → oldest)
 -------------------------------- */
 async function fetchMovies(searchTerm) {
   results.innerHTML = `
@@ -21,7 +22,6 @@ async function fetchMovies(searchTerm) {
   if (data.Response === "True") {
     // Always sort from newest to oldest by release year
     data.Search.sort((a, b) => parseInt(b.Year) - parseInt(a.Year));
-
     // Show only the first six results
     displayMovies(data.Search.slice(0, 6));
   } else {
@@ -144,7 +144,7 @@ searchInput.addEventListener("keypress", (e) => {
 });
 
 /* --------------------------------
-   Extra UI injection and sort feature
+   Extra UI injection (navigation & footer only)
 -------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
   // --- Inject navigation bar ---
@@ -160,41 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
   header.insertBefore(nav, header.querySelector('.search-bar'));
 
-  // --- Inject sort dropdown ---
-  const sortSelect = document.createElement('select');
-  sortSelect.id = 'sort-order';
-  sortSelect.innerHTML = `
-    <option value="new">Newest → Oldest</option>
-    <option value="old">Oldest → Newest</option>
-  `;
-  document.querySelector('.search-bar').appendChild(sortSelect);
-
-  // When the sort order changes, re-run the search if there is a term
-  sortSelect.addEventListener('change', () => {
-    const term = searchInput.value.trim();
-    if (term) fetchMovies(term);
-  });
-
   // --- Inject footer ---
   const footer = document.createElement('footer');
   footer.className = 'site-footer';
   footer.innerHTML = '<p>&copy; 2025 Movie Search App. All rights reserved.</p>';
   const scriptEl = document.querySelector('script[src="script.js"]');
   document.body.insertBefore(footer, scriptEl);
-
-  // --- Override displayMovies for sorting by year based on dropdown ---
-  const originalDisplayMovies = displayMovies;
-  window.displayMovies = function(movies) {
-    const select = document.getElementById('sort-order');
-    if (select) {
-      const order = select.value;
-      movies = [...movies];
-      if (order === 'new') {
-        movies.sort((a, b) => parseInt(b.Year) - parseInt(a.Year));
-      } else {
-        movies.sort((a, b) => parseInt(a.Year) - parseInt(b.Year));
-      }
-    }
-    originalDisplayMovies(movies);
-  };
 });
