@@ -33,14 +33,14 @@ header {
   border-radius: 5px;
 }
 
+/* The movies container uses flexbox; you can switch to grid if you prefer */
 .movies {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;   /* adjust spacing as needed */
+  gap: 20px;
   padding: 20px;
 }
-
 
 .movie {
   width: 180px;
@@ -59,7 +59,7 @@ header {
   margin-top: 10px;
 }
 
-/* AUTOCOMPLETE */
+/* Autocomplete */
 .suggestions {
   position: absolute;
   left: 50%;
@@ -84,7 +84,7 @@ header {
   background: #444;
 }
 
-/* MODAL */
+/* Modal */
 .modal {
   position: fixed;
   top: 0;
@@ -114,4 +114,34 @@ header {
   float: right;
   cursor: pointer;
   font-size: 24px;
+}
+
+/* Navigation bar */
+.main-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.main-nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.main-nav a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+.site-footer {
+  background: #111;
+  color: #aaa;
+  text-align: center;
+  padding: 20px;
+  font-size: 0.9rem;
+  border-top: 1px solid #222;
 }
