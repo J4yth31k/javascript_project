@@ -19,7 +19,7 @@ async function fetchMovies(searchTerm) {
   const data = await res.json();
 
   if (data.Response === "True") {
-    // Sort from newest to oldest by year
+    // Always sort from newest to oldest by release year
     data.Search.sort((a, b) => parseInt(b.Year) - parseInt(a.Year));
 
     // Show only the first six results
