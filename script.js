@@ -9,7 +9,6 @@ const suggestionsBox= document.getElementById("suggestions");
    Fetch movies from OMDb
 -------------------------------- */
 async function fetchMovies(searchTerm) {
-  // show skeletons while loading
   results.innerHTML = `
     <div class="movie skeleton"></div>
     <div class="movie skeleton"></div>
@@ -20,9 +19,10 @@ async function fetchMovies(searchTerm) {
   const data = await res.json();
 
   if (data.Response === "True") {
-    // default alphabetical sort
-    data.Search.sort((a, b) => a.Title.localeCompare(b.Title));
-    // show only first six
+    // Sort from newest to oldest by year
+    data.Search.sort((a, b) => parseInt(b.Year) - parseInt(a.Year));
+
+    // Show only the first six results
     displayMovies(data.Search.slice(0, 6));
   } else {
     results.innerHTML = `<p>No results found.</p>`;
