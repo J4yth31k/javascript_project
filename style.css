@@ -33,6 +33,13 @@ header {
   border-radius: 5px;
 }
 
+.search-bar select {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background: #333;
+  color: white;
+}
 /* The movies container uses flexbox; you can switch to grid if you prefer */
 .movies {
   display: flex;
