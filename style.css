@@ -47,6 +47,10 @@ header {
   justify-content: center;
   gap: 20px;
   padding: 20px;
+
+  /* ⭐ forces 3 per row */
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .movie {
