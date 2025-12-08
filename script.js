@@ -68,7 +68,7 @@ async function fetchMovies(searchTerm) {
       }
       state.movies = unique;
       const sorted = sortMovies(state.movies, sortSelect.value);
-      displayMovies(sorted.slice(0, 12));
+      displayMovies(sorted.slice(0,6));
     } else {
       state.movies = [];
       results.innerHTML = '<p>No results found.</p>';
