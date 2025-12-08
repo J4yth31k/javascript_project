@@ -17,11 +17,16 @@
     <div class="search-bar">
       <input id="search-input" type="text" placeholder="Search for a movie..." />
       <button id="search-btn">Search</button>
-    <!-- sort dropdown -->
-  <select id="sort-order">
-    <option value="new">Newest → Oldest</option>
-    <option value="old">Oldest → Newest</option>
-  </select>
+
+      <!-- sort dropdown -->
+      <select id="sort-order">
+        <!-- Year-based sorting -->
+        <option value="year-desc">Newest → Oldest</option>
+        <option value="year-asc">Oldest → Newest</option>
+        <!-- Title-based sorting -->
+        <option value="title-asc">Title A → Z</option>
+        <option value="title-desc">Title Z → A</option>
+      </select>
     </div>
 
     <div id="suggestions" class="suggestions"></div>
