@@ -6,12 +6,23 @@ const results = document.getElementById('results');
 const input = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
 const sortSelect = document.getElementById('sort-order');
+const categoriesContainer = document.getElementById('category-rows');
 
 // App state
 let state = {
   movies: [],
   lastQuery: ''
 };
+
+// Categories for the home page (you can tweak titles/queries)
+const CATEGORIES = [
+  { title: 'Superhero Movies', query: 'superman' },
+  { title: 'Batman Collection', query: 'batman' },
+  { title: 'Sci-Fi Hits', query: 'star wars' },
+  { title: 'Animated Favorites', query: 'toy story' }
+];
+
+// ---------- Sorting ----------
 
 function sortMovies(list, order) {
   const copy = [...list];
@@ -41,43 +52,50 @@ function sortMovies(list, order) {
   return copy;
 }
 
+// ---------- Shared click handler for movie cards ----------
+
+function attachMovieClickHandlers(scope = document) {
+  scope.querySelectorAll('.movie').forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.getAttribute('data-id');
+      if (!id) return;
+      window.location.href = `details.html?id=${encodeURIComponent(id)}`;
+    });
+  });
+}
+
+// ---------- Display search results (2x3 grid) ----------
+
 function displayMovies(list) {
   if (!list || list.length === 0) {
     results.innerHTML = '<p>No results found.</p>';
     return;
   }
 
-  // only show first 6
+  // Only first 6 movies
   const trimmed = list.slice(0, 6);
 
-  const html = trimmed
-    .map((m) => {
-      const poster =
-        m.Poster && m.Poster !== "N/A"
-          ? m.Poster
-          : "https://via.placeholder.com/180x260?text=No+Poster";
-      return `
-        <div class="movie" data-id="${m.imdbID}">
-          <img src="${poster}" alt="${m.Title}" />
-          <div class="movie-info">
-            <strong>${m.Title}</strong>
-            <div>${m.Year}</div>
-          </div>
+  const html = trimmed.map(m => {
+    const poster =
+      m.Poster && m.Poster !== 'N/A'
+        ? m.Poster
+        : 'https://via.placeholder.com/180x260?text=No+Poster';
+    return `
+      <div class="movie" data-id="${m.imdbID}">
+        <img src="${poster}" alt="${m.Title}" />
+        <div class="movie-info">
+          <strong>${m.Title}</strong>
+          <div>${m.Year}</div>
         </div>
-      `;
-    })
-    .join("");
+      </div>
+    `;
+  }).join('');
 
   results.innerHTML = html;
-
-  // click → open details.html?id=...
-  document.querySelectorAll(".movie").forEach((card) => {
-    card.addEventListener("click", () => {
-      const id = card.getAttribute("data-id");
-      window.location.href = `details.html?id=${encodeURIComponent(id)}`;
-    });
-  });
+  attachMovieClickHandlers(results);
 }
+
+// ---------- Fetch for search ----------
 
 async function fetchMovies(searchTerm) {
   state.lastQuery = searchTerm;
@@ -88,7 +106,9 @@ async function fetchMovies(searchTerm) {
   `;
 
   try {
-    const res  = await fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(searchTerm)}&apikey=${apiKey}`);
+    const res = await fetch(
+      `https://www.omdbapi.com/?s=${encodeURIComponent(searchTerm)}&type=movie&apikey=${apiKey}`
+    );
     const data = await res.json();
 
     if (data.Response === 'True' && Array.isArray(data.Search)) {
@@ -96,11 +116,14 @@ async function fetchMovies(searchTerm) {
       const ids = new Set();
       const unique = [];
       for (const m of data.Search) {
-        if (!ids.has(m.imdbID)) { ids.add(m.imdbID); unique.push(m); }
+        if (!ids.has(m.imdbID)) {
+          ids.add(m.imdbID);
+          unique.push(m);
+        }
       }
       state.movies = unique;
       const sorted = sortMovies(state.movies, sortSelect.value);
-      displayMovies(sorted.slice(0,6));
+      displayMovies(sorted);
     } else {
       state.movies = [];
       results.innerHTML = '<p>No results found.</p>';
@@ -111,7 +134,78 @@ async function fetchMovies(searchTerm) {
   }
 }
 
-// Events
+// ---------- Categories (Netflix-style rows) ----------
+
+async function fetchCategoryMovies(query) {
+  try {
+    const res = await fetch(
+      `https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${apiKey}`
+    );
+    const data = await res.json();
+
+    if (data.Response === 'True' && Array.isArray(data.Search)) {
+      const ids = new Set();
+      const unique = [];
+      for (const m of data.Search) {
+        if (!ids.has(m.imdbID)) {
+          ids.add(m.imdbID);
+          unique.push(m);
+        }
+      }
+      return unique.slice(0, 10); // up to 10 per row
+    }
+  } catch (err) {
+    console.error('Category fetch error:', err);
+  }
+  return [];
+}
+
+async function loadCategories() {
+  if (!categoriesContainer) return;
+  categoriesContainer.innerHTML = '';
+
+  for (const cat of CATEGORIES) {
+    const movies = await fetchCategoryMovies(cat.query);
+    if (!movies.length) continue;
+
+    const section = document.createElement('section');
+    section.className = 'category-row';
+
+    const title = document.createElement('h2');
+    title.className = 'category-title';
+    title.textContent = cat.title;
+
+    const scroller = document.createElement('div');
+    scroller.className = 'category-scroller';
+
+    scroller.innerHTML = movies
+      .map(m => {
+        const poster =
+          m.Poster && m.Poster !== 'N/A'
+            ? m.Poster
+            : 'https://via.placeholder.com/180x260?text=No+Poster';
+        return `
+          <div class="movie" data-id="${m.imdbID}">
+            <img src="${poster}" alt="${m.Title}" />
+            <div class="movie-info">
+              <strong>${m.Title}</strong>
+              <div>${m.Year}</div>
+            </div>
+          </div>
+        `;
+      })
+      .join('');
+
+    section.appendChild(title);
+    section.appendChild(scroller);
+    categoriesContainer.appendChild(section);
+
+    attachMovieClickHandlers(scroller);
+  }
+}
+
+// ---------- Events ----------
+
 searchBtn.addEventListener('click', () => {
   const q = input.value.trim();
   if (q) fetchMovies(q);
@@ -127,6 +221,10 @@ input.addEventListener('keydown', (e) => {
 sortSelect.addEventListener('change', () => {
   if (!state.movies.length) return;
   const sorted = sortMovies(state.movies, sortSelect.value);
-  displayMovies(sorted.slice(0, 6)); 
+  displayMovies(sorted);
 });
 
+// Load categories on first visit
+window.addEventListener('DOMContentLoaded', () => {
+  loadCategories();
+});
