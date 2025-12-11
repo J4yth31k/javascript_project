@@ -39,20 +39,25 @@
     <div id="suggestions" class="suggestions"></div>
   </header>
 
+  <main>
+  <!-- Category rows (Netflix-style) -->
+  <section id="category-rows" class="category-rows"></section>
+
+  <!-- Search results grid (still 2x3) -->
   <section class="movies" id="results"></section>
+</main>
 
-  <!-- MODAL -->
-  <div id="movie-modal" class="modal hidden">
-    <div class="modal-content">
-      <!-- ⭐ FIXED: closed the span tag -->
-      <span id="close-modal">&times;</span>
+<!-- MODAL (you can keep or remove if unused) -->
+<div id="movie-modal" class="modal hidden">
+  <div class="modal-content">
+    <span id="close-modal">&times;</span>
 
-      <img id="modal-poster" />
-      <h2 id="modal-title"></h2>
-      <p id="modal-year"></p>
-      <p id="modal-plot"></p>
-    </div>
+    <img id="modal-poster" />
+    <h2 id="modal-title"></h2>
+    <p id="modal-year"></p>
+    <p id="modal-plot"></p>
   </div>
+</div>
 
   <script src="script.js"></script>
 </body>
