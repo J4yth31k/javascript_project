@@ -1,5 +1,5 @@
 // Basic OMDb setup — replace with your own free key if available
-const apiKey = typeof window.apiKey !== 'undefined' ? window.apiKey : 'thewdb';
+const apiKey = '56abe8c88c0cdb674e099cc2f4b7b7cc';
 
 // DOM refs
 const results = document.getElementById('results');
