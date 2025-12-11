@@ -264,3 +264,75 @@ header {
   transform: scale(1.05);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
 }
+/* Smooth scrolling for nav links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Netflix-style hover and fade-in */
+.movie {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
+}
+
+.movie:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+/* Optional: subtle fade-up animation for cards */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.movie img {
+  animation: fadeUp 0.35s ease-out;
+}
+
+/* Category rows (home page) */
+.category-rows {
+  padding: 20px;
+}
+
+.category-row {
+  margin-bottom: 30px;
+}
+
+.category-title {
+  margin: 0 0 10px 10px;
+  font-size: 1.2rem;
+}
+
+.category-scroller {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding: 5px 10px 15px;
+}
+
+.category-scroller .movie {
+  flex: 0 0 150px;
+}
+
+.category-scroller .movie img {
+  width: 150px;
+  height: 220px;
+}
+
+/* Keep your 2x3 search grid centered */
+.movies {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+
+  max-width: 660px;
+  margin: 0 auto;
+}
