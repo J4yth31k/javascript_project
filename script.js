@@ -16,10 +16,15 @@ let state = {
 
 // Categories for the home page (you can tweak titles/queries)
 const CATEGORIES = [
-  { title: 'Superhero Movies', query: 'superman' },
-  { title: 'Batman Collection', query: 'batman' },
-  { title: 'Sci-Fi Hits', query: 'star wars' },
-  { title: 'Animated Favorites', query: 'toy story' }
+  { title: "Comedy", query: "comedy" },
+  { title: "Action", query: "action" },
+  { title: "Horror", query: "horror" },
+  { title: "Romance", query: "romance" },
+  { title: "Sci-Fi", query: "science fiction" },
+  { title: "Drama", query: "drama" },
+  { title: "Family Movies", query: "family" },
+  { title: "Thrillers", query: "thriller" },
+  { title: "Animation", query: "animated" }
 ];
 
 // ---------- Sorting ----------
