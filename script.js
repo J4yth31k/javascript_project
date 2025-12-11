@@ -15,15 +15,29 @@ let state = {
 
 function sortMovies(list, order) {
   const copy = [...list];
+
   copy.sort((a, b) => {
     const yearA = parseInt(a.Year) || 0;
     const yearB = parseInt(b.Year) || 0;
-    if (order === 'az') return a.Title.localeCompare(b.Title);
-    if (order === 'za') return b.Title.localeCompare(a.Title);
-    if (order === 'old') return yearA - yearB; // oldest → newest
-    if (yearA !== yearB) return yearB - yearA; // newest → oldest
-    return a.Title.localeCompare(b.Title);     // tie → A–Z
+
+    switch (order) {
+      case 'title-asc': // A → Z
+        return a.Title.localeCompare(b.Title);
+
+      case 'title-desc': // Z → A
+        return b.Title.localeCompare(a.Title);
+
+      case 'year-asc': // Oldest → Newest
+        if (yearA !== yearB) return yearA - yearB;
+        return a.Title.localeCompare(b.Title);
+
+      case 'year-desc': // Newest → Oldest
+      default:
+        if (yearA !== yearB) return yearB - yearA;
+        return a.Title.localeCompare(b.Title);
+    }
   });
+
   return copy;
 }
 
@@ -95,5 +109,6 @@ input.addEventListener('keydown', (e) => {
 sortSelect.addEventListener('change', () => {
   if (!state.movies.length) return;
   const sorted = sortMovies(state.movies, sortSelect.value);
-  displayMovies(sorted.slice(0, 12));
+  displayMovies(sorted.slice(0, 6)); 
 });
+
