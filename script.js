@@ -1,4 +1,5 @@
 // Basic OMDb setup — replace with your own free key if available
+`https://www.omdbapi.com/?s=${encodeURIComponent(searchTerm)}&type=movie&apikey=${apiKey}`
 const apiKey = 'b99960a';
 
 // DOM refs
