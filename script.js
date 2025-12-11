@@ -46,8 +46,16 @@ function displayMovies(list) {
     results.innerHTML = '<p>No results found.</p>';
     return;
   }
-  const html = list.map(m => {
-    const poster = m.Poster && m.Poster !== 'N/A' ? m.Poster : 'https://via.placeholder.com/180x260?text=No+Poster';
+
+  // still only show first 6
+  const trimmed = list.slice(0, 6);
+
+  const html = trimmed.map(m => {
+    const poster =
+      m.Poster && m.Poster !== 'N/A'
+        ? m.Poster
+        : 'https://via.placeholder.com/180x260?text=No+Poster';
+
     return `
       <div class="movie" data-id="${m.imdbID}">
         <img src="${poster}" alt="${m.Title}" />
@@ -58,7 +66,16 @@ function displayMovies(list) {
       </div>
     `;
   }).join('');
+
   results.innerHTML = html;
+
+  // add click handler so each card opens the details page
+  document.querySelectorAll('.movie').forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.getAttribute('data-id');
+      window.location.href = `details.html?id=${encodeURIComponent(id)}`;
+    });
+  });
 }
 
 async function fetchMovies(searchTerm) {
