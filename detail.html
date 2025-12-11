@@ -9,7 +9,7 @@
 <body>
 
   <header>
-    <h1>Movie Details</h1>
+    <h1>Movie Search App</h1>
     <nav class="main-nav">
       <ul>
         <li><a href="index.html">Home</a></li>
@@ -17,14 +17,46 @@
     </nav>
   </header>
 
-  <!-- Reuse your flexbox + modal card styles -->
-  <main class="movies">
-    <div class="modal-content">
-      <img id="details-poster" />
-      <h2 id="details-title"></h2>
-      <p id="details-year"></p>
-      <p id="details-plot"></p>
-    </div>
+  <main class="detail-page">
+    <section class="detail-hero">
+      <!-- blurred background poster -->
+      <div class="detail-hero-backdrop" id="details-backdrop"></div>
+      <div class="detail-hero-overlay"></div>
+
+      <div class="detail-hero-content">
+        <img id="details-poster" class="detail-poster" alt="Movie poster" />
+
+        <div class="detail-text">
+          <h2 id="details-title"></h2>
+
+          <p class="detail-meta">
+            <span id="details-year"></span>
+            &bull;
+            <span id="details-rated"></span>
+            &bull;
+            <span id="details-runtime"></span>
+          </p>
+
+          <p id="details-genre" class="detail-genre"></p>
+
+          <p id="details-plot" class="detail-plot"></p>
+
+          <p class="detail-extra">
+            <strong>Starring:</strong> <span id="details-actors"></span>
+          </p>
+
+          <p class="detail-extra">
+            <strong>Director:</strong> <span id="details-director"></span>
+          </p>
+
+          <p class="detail-rating">
+            ⭐ <span id="details-rating"></span> / 10
+          </p>
+
+          <button class="detail-play-btn">▶ Play</button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script src="details.js"></script>
