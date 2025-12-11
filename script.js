@@ -47,32 +47,33 @@ function displayMovies(list) {
     return;
   }
 
-  // still only show first 6
+  // only show first 6
   const trimmed = list.slice(0, 6);
 
-  const html = trimmed.map(m => {
-    const poster =
-      m.Poster && m.Poster !== 'N/A'
-        ? m.Poster
-        : 'https://via.placeholder.com/180x260?text=No+Poster';
-
-    return `
-      <div class="movie" data-id="${m.imdbID}">
-        <img src="${poster}" alt="${m.Title}" />
-        <div class="movie-info">
-          <strong>${m.Title}</strong>
-          <div>${m.Year}</div>
+  const html = trimmed
+    .map((m) => {
+      const poster =
+        m.Poster && m.Poster !== "N/A"
+          ? m.Poster
+          : "https://via.placeholder.com/180x260?text=No+Poster";
+      return `
+        <div class="movie" data-id="${m.imdbID}">
+          <img src="${poster}" alt="${m.Title}" />
+          <div class="movie-info">
+            <strong>${m.Title}</strong>
+            <div>${m.Year}</div>
+          </div>
         </div>
-      </div>
-    `;
-  }).join('');
+      `;
+    })
+    .join("");
 
   results.innerHTML = html;
 
-  // add click handler so each card opens the details page
-  document.querySelectorAll('.movie').forEach(card => {
-    card.addEventListener('click', () => {
-      const id = card.getAttribute('data-id');
+  // click → open details.html?id=...
+  document.querySelectorAll(".movie").forEach((card) => {
+    card.addEventListener("click", () => {
+      const id = card.getAttribute("data-id");
       window.location.href = `details.html?id=${encodeURIComponent(id)}`;
     });
   });
