@@ -156,3 +156,111 @@ header {
   font-size: 0.9rem;
   border-top: 1px solid #222;
 }
+/* === Netflix-style details page === */
+.detail-page {
+  background: #000;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.detail-hero {
+  position: relative;
+  padding: 60px 20px;
+  overflow: hidden;
+}
+
+/* blurred background */
+.detail-hero-backdrop {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(20px);
+  opacity: 0.4;
+  transform: scale(1.1);
+}
+
+.detail-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #000 20%, transparent 60%);
+}
+
+.detail-hero-content {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  z-index: 1;
+}
+
+.detail-poster {
+  width: 260px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.detail-text {
+  max-width: 600px;
+}
+
+.detail-text h2 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+.detail-meta {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+.detail-genre {
+  font-size: 0.95rem;
+  color: #ddd;
+  margin-bottom: 15px;
+}
+
+.detail-plot {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.detail-extra {
+  font-size: 0.9rem;
+  color: #ddd;
+  margin-bottom: 5px;
+}
+
+.detail-rating {
+  font-size: 1rem;
+  margin: 15px 0;
+}
+
+.detail-play-btn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background: red;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.detail-play-btn:hover {
+  background: #ff3b3b;
+}
+
+/* Netflix-ish hover effect on the home grid */
+.movie {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.movie:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
