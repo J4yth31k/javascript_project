@@ -188,17 +188,3 @@ input.addEventListener('input', () => {
 
 // Load categories on page load
 window.addEventListener('DOMContentLoaded', loadCategories);
-
-// ===== CONNECT UI TO LOGIC =====
-const searchForm = document.getElementById("search-form");
-const sortOrder = document.getElementById("sort-order");
-
-searchForm.addEventListener("submit", (e) => {
-  e.preventDefault();        // stops page refresh
-  searchMovies();            // your existing function
-});
-
-sortOrder.addEventListener("change", () => {
-  sortResults();             // your existing function
-});
-
