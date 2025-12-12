@@ -132,59 +132,39 @@ async function loadCategories() {
 
 // ---------- Events ----------
 
-// 1) ADD this helper function (place it right above your event listeners)
-function performSearch() {
-  const q = input.value.trim();
-  console.log('Search query:', q);
-
-  if (q) {
-    fetchMovies(q);
-  } else {
-    results.innerHTML = '<p>Please enter a search term.</p>';
-    input.focus();
+// Make sure these exist before adding listeners
+window.addEventListener("DOMContentLoaded", () => {
+  // Guard: if IDs are missing, stop and tell you in console
+  if (!results || !input || !searchBtn || !sortSelect || !categoriesContainer) {
+    console.error("Missing required HTML IDs. Check search-form/search-input/search-btn/sort-order/results/category-rows.");
+    return;
   }
-}
 
-// 2) REPLACE your current event listeners with these
-
-// ===== DOM ELEMENTS =====
-const searchForm = document.getElementById("search-form");
-const sortOrder = document.getElementById("sort-order");
-
-// ===== EVENT LISTENERS =====
-searchForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  searchMovies();
-});
-
-sortOrder.addEventListener("change", () => {
-  sortResults();
-});
-
-// Button click
-searchBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  performSearch();
-});
-
-// Enter key inside the input
-input.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
+  // Submit (clicking Search OR pressing Enter)
+  const form = document.getElementById("search-form");
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
     performSearch();
-  }
+  });
+
+  // Sorting (re-sort whatever is currently loaded)
+  sortSelect.addEventListener("change", () => {
+    if (state.movies.length) {
+      displayMovies(sortMovies(state.movies, sortSelect.value));
+    }
+  });
+
+  // Auto-search (debounce)
+  let debounceTimer;
+  input.addEventListener("input", () => {
+    clearTimeout(debounceTimer);
+    if (input.value.trim().length < 2) return;
+
+    debounceTimer = setTimeout(() => {
+      performSearch();
+    }, 285);
+  });
+
+  // Load categories
+  loadCategories();
 });
-
-// ---------- Auto-search (285ms debounce) ----------
-let debounceTimer;
-input.addEventListener('input', () => {
-  clearTimeout(debounceTimer);
-  if (input.value.trim().length < 2) return;
-
-  debounceTimer = setTimeout(() => {
-    performSearch();
-  }, 285);
-});
-
-// Load categories on page load
-window.addEventListener('DOMContentLoaded', loadCategories);
