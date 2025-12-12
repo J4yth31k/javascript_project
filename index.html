@@ -6,6 +6,8 @@
   <title>Movie Search App</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <!-- ✅ Make sure script loads after DOM -->
+  <script src="script.js" defer></script>
 </head>
 
 <body>
@@ -19,7 +21,7 @@
 
     <p class="intro">Welcome! Search for a movie below.</p>
 
-    <!-- ✅ IDs added (search-input, search-btn, sort-order) -->
+    <!-- ✅ Search input and button -->
     <div class="search-bar">
       <input id="search-input" type="text" placeholder="Search for a movie..." />
       <button id="search-btn">Search</button>
@@ -36,12 +38,11 @@
   </header>
 
   <main>
-    <!-- ✅ containers your JS needs -->
     <section id="category-rows" class="category-rows"></section>
     <section class="movies" id="results"></section>
   </main>
 
-  <!-- Modal (optional) -->
+  <!-- Modal -->
   <div id="movie-modal" class="modal hidden">
     <div class="modal-content">
       <span id="close-modal">&times;</span>
@@ -55,7 +56,5 @@
   <script>
     window.apiKey = 'b99960a';
   </script>
-
-  <script src="script.js"></script>
 </body>
 </html>
