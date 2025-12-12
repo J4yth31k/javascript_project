@@ -19,7 +19,7 @@ const backdropEl = document.getElementById("details-backdrop");
 
 // reuse the same key as your main script
 const apiKey =
-  typeof window.apiKey !== "undefined" ? window.apiKey : "thewdb";
+  typeof window.apiKey !== "undefined" ? window.apiKey : "b99960a";
 
 async function loadMovie() {
   if (!imdbID) {
