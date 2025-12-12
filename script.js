@@ -1,4 +1,5 @@
-const apiKey ='b99960a'; 
+// Use window.apiKey if defined in HTML, otherwise fallback to your OMDb key
+const apiKey = typeof window.apiKey !== 'undefined' ? window.apiKey : 'b99960a'; 
 
 // DOM refs
 const results = document.getElementById('results');
