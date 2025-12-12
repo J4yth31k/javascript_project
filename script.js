@@ -1,6 +1,4 @@
-// Basic OMDb setup — replace with your own free key if available
-const apiKey = 'b99960a'; // or your real OMDb key here
-
+const apiKey ='b99960a'; 
 
 // DOM refs
 const results = document.getElementById('results');
