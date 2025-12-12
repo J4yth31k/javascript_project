@@ -300,29 +300,40 @@ html {
   padding: 20px;
 }
 
+/* each category block */
 .category-row {
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  text-align: center;
 }
 
+/* category title */
 .category-title {
-  margin: 0 0 10px 10px;
-  font-size: 1.2rem;
+  margin: 0 0 15px;
+  font-size: 1.4rem;
 }
 
+/* movies inside each category: centered grid */
 .category-scroller {
   display: flex;
-  gap: 15px;
-  overflow-x: auto;
-  padding: 5px 10px 15px;
+  flex-wrap: wrap;
+  justify-content: center;  /* center all movie cards */
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;           /* center the whole row */
+  padding-bottom: 10px;
 }
 
+/* movie cards inside categories */
 .category-scroller .movie {
   flex: 0 0 150px;
 }
 
+/* poster size in categories */
 .category-scroller .movie img {
   width: 150px;
   height: 220px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 /* Keep your 2x3 search grid centered */
