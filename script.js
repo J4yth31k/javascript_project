@@ -73,17 +73,22 @@ function displayMovies(list) {
 // ---------- Fetch search ----------
 async function fetchMovies(query) {
   results.innerHTML = '<p>Loading...</p>';
+  try {
+    const res = await fetch(
+      `https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${apiKey}`
+    );
+    const data = await res.json();
+    console.log("OMDb data:", data); // 🔍 Debug
 
-  const res = await fetch(
-    `https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${apiKey}`
-  );
-  const data = await res.json();
-
-  if (data.Response === 'True') {
-    state.movies = data.Search;
-    displayMovies(sortMovies(state.movies, sortSelect.value));
-  } else {
-    results.innerHTML = '<p>No results found.</p>';
+    if (data.Response === 'True') {
+      state.movies = data.Search;
+      displayMovies(sortMovies(state.movies, sortSelect.value));
+    } else {
+      results.innerHTML = '<p>No results found.</p>';
+    }
+  } catch (error) {
+    console.error("Fetch failed:", error); // 🔍 Debug
+    results.innerHTML = '<p>Error fetching data.</p>';
   }
 }
 
@@ -127,6 +132,7 @@ async function loadCategories() {
 // ---------- Events ----------
 searchBtn.addEventListener('click', () => {
   const q = input.value.trim();
+  console.log("Search clicked. Query:", q); // 🔍 Debug
   if (q) fetchMovies(q);
 });
 
@@ -142,7 +148,6 @@ sortSelect.addEventListener('change', () => {
 
 // ---------- Auto-search (285ms debounce) ----------
 let debounceTimer;
-
 input.addEventListener('input', () => {
   clearTimeout(debounceTimer);
   if (input.value.trim().length < 2) return;
