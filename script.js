@@ -130,19 +130,42 @@ async function loadCategories() {
 }
 
 // ---------- Events ----------
-searchBtn.addEventListener('click', () => {
+
+// 1) ADD this helper function (place it right above your event listeners)
+function performSearch() {
   const q = input.value.trim();
-  console.log("Search clicked. Query:", q); // 🔍 Debug
-  if (q) fetchMovies(q);
+  console.log('Search query:', q);
+
+  if (q) {
+    fetchMovies(q);
+  } else {
+    results.innerHTML = '<p>Please enter a search term.</p>';
+    input.focus();
+  }
+}
+
+// 2) REPLACE your current event listeners with these
+
+// If you have a <form id="search-form">, wire it like this:
+const searchForm = document.getElementById('search-form');
+if (searchForm) {
+  searchForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performSearch();
+  });
+}
+
+// Button click
+searchBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  performSearch();
 });
 
-input.addEventListener('keydown', e => {
-  if (e.key === 'Enter') searchBtn.click();
-});
-
-sortSelect.addEventListener('change', () => {
-  if (state.movies.length) {
-    displayMovies(sortMovies(state.movies, sortSelect.value));
+// Enter key inside the input
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    performSearch();
   }
 });
 
@@ -153,7 +176,7 @@ input.addEventListener('input', () => {
   if (input.value.trim().length < 2) return;
 
   debounceTimer = setTimeout(() => {
-    searchBtn.click();
+    performSearch();
   }, 285);
 });
 
