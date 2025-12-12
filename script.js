@@ -233,3 +233,29 @@ sortSelect.addEventListener('change', () => {
 window.addEventListener('DOMContentLoaded', () => {
   loadCategories();
 });
+/* === ADD-ON: Auto-search while typing (minimal, safe) === */
+const searchInput = document.getElementById("search-input");
+const searchBtn = document.getElementById("search-btn");
+const sortOrder = document.getElementById("sort-order");
+
+let debounceTimer;
+
+// Auto-search after typing
+searchInput.addEventListener("input", () => {
+clearTimeout(debounceTimer);
+
+const query = searchInput.value.trim();
+if (query.length < 2) return;
+
+debounceTimer = setTimeout(() => {
+// reuse existing Search button logic
+searchBtn.click();
+}, 450);
+});
+
+// Re-run search when sort order changes
+sortOrder.addEventListener("change", () => {
+const query = searchInput.value.trim();
+if (query.length < 2) return;
+searchBtn.click();
+});
