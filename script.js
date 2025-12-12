@@ -147,14 +147,19 @@ function performSearch() {
 
 // 2) REPLACE your current event listeners with these
 
-// If you have a <form id="search-form">, wire it like this:
-const searchForm = document.getElementById('search-form');
-if (searchForm) {
-  searchForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    performSearch();
-  });
-}
+// ===== DOM ELEMENTS =====
+const searchForm = document.getElementById("search-form");
+const sortOrder = document.getElementById("sort-order");
+
+// ===== EVENT LISTENERS =====
+searchForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  searchMovies();
+});
+
+sortOrder.addEventListener("change", () => {
+  sortResults();
+});
 
 // Button click
 searchBtn.addEventListener('click', (e) => {
