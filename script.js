@@ -1,7 +1,7 @@
-// Use window.apiKey if defined in HTML, otherwise fallback to your OMDb key
-const apiKey = typeof window.apiKey !== 'undefined' ? window.apiKey : 'b99960a'; 
+// Use window.apiKey if defined in HTML, otherwise fallback
+const apiKey = typeof window.apiKey !== 'undefined' ? window.apiKey : 'b99960a';
 
-// DOM refs
+// DOM references
 const results = document.getElementById('results');
 const input = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
@@ -14,7 +14,7 @@ let state = {
   lastQuery: ''
 };
 
-// Categories for the home page
+// Categories
 const CATEGORIES = [
   { title: "Comedy", query: "comedy" },
   { title: "Action", query: "action" },
@@ -29,109 +29,74 @@ const CATEGORIES = [
 
 // ---------- Sorting ----------
 function sortMovies(list, order) {
-  const copy = [...list];
+  return [...list].sort((a, b) => {
+    const yA = parseInt(a.Year) || 0;
+    const yB = parseInt(b.Year) || 0;
 
-  copy.sort((a, b) => {
-    const yearA = parseInt(a.Year) || 0;
-    const yearB = parseInt(b.Year) || 0;
-
-    switch (order) {
-      case 'title-asc':
-        return a.Title.localeCompare(b.Title);
-      case 'title-desc':
-        return b.Title.localeCompare(a.Title);
-      case 'year-asc':
-        return yearA !== yearB ? yearA - yearB : a.Title.localeCompare(b.Title);
-      case 'year-desc':
-      default:
-        return yearA !== yearB ? yearB - yearA : a.Title.localeCompare(b.Title);
-    }
+    if (order === 'title-asc') return a.Title.localeCompare(b.Title);
+    if (order === 'title-desc') return b.Title.localeCompare(a.Title);
+    if (order === 'year-asc') return yA - yB;
+    return yB - yA;
   });
-
-  return copy;
 }
 
-// ---------- Movie click ----------
-function attachMovieClickHandlers(scope = document) {
+// ---------- Movie card clicks ----------
+function attachMovieClickHandlers(scope) {
   scope.querySelectorAll('.movie').forEach(card => {
     card.addEventListener('click', () => {
-      const id = card.getAttribute('data-id');
-      if (!id) return;
-      window.location.href = `details.html?id=${encodeURIComponent(id)}`;
+      const id = card.dataset.id;
+      if (id) window.location.href = `details.html?id=${id}`;
     });
   });
 }
 
 // ---------- Display search results ----------
 function displayMovies(list) {
-  if (!list || list.length === 0) {
+  if (!list.length) {
     results.innerHTML = '<p>No results found.</p>';
     return;
   }
 
-  const trimmed = list.slice(0, 6);
-
-  results.innerHTML = trimmed.map(m => {
-    const poster =
-      m.Poster && m.Poster !== 'N/A'
-        ? m.Poster
-        : 'https://via.placeholder.com/180x260?text=No+Poster';
-
-    return `
-      <div class="movie" data-id="${m.imdbID}">
-        <img src="${poster}" alt="${m.Title}" />
-        <div class="movie-info">
-          <strong>${m.Title}</strong>
-          <div>${m.Year}</div>
-        </div>
+  results.innerHTML = list.slice(0, 6).map(m => `
+    <div class="movie" data-id="${m.imdbID}">
+      <img src="${m.Poster !== 'N/A' ? m.Poster : 'https://via.placeholder.com/180x260'}" />
+      <div class="movie-info">
+        <strong>${m.Title}</strong>
+        <div>${m.Year}</div>
       </div>
-    `;
-  }).join('');
+    </div>
+  `).join('');
 
   attachMovieClickHandlers(results);
 }
 
 // ---------- Fetch search ----------
-async function fetchMovies(searchTerm) {
-  state.lastQuery = searchTerm;
-  results.innerHTML = `<p>Loading...</p>`;
+async function fetchMovies(query) {
+  results.innerHTML = '<p>Loading...</p>';
 
-  try {
-    const res = await fetch(
-      `https://www.omdbapi.com/?s=${encodeURIComponent(searchTerm)}&type=movie&apikey=${apiKey}`
-    );
-    const data = await res.json();
+  const res = await fetch(
+    `https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${apiKey}`
+  );
+  const data = await res.json();
 
-    if (data.Response === 'True') {
-      state.movies = data.Search;
-      displayMovies(sortMovies(state.movies, sortSelect.value));
-    } else {
-      state.movies = [];
-      results.innerHTML = '<p>No results found.</p>';
-    }
-  } catch (err) {
-    console.error(err);
-    results.innerHTML = '<p>Error loading movies.</p>';
+  if (data.Response === 'True') {
+    state.movies = data.Search;
+    displayMovies(sortMovies(state.movies, sortSelect.value));
+  } else {
+    results.innerHTML = '<p>No results found.</p>';
   }
 }
 
 // ---------- Categories ----------
 async function fetchCategoryMovies(query) {
-  try {
-    const res = await fetch(
-      `https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${apiKey}`
-    );
-    const data = await res.json();
-    return data.Response === 'True' ? data.Search.slice(0, 10) : [];
-  } catch {
-    return [];
-  }
+  const res = await fetch(
+    `https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${apiKey}`
+  );
+  const data = await res.json();
+  return data.Response === 'True' ? data.Search.slice(0, 10) : [];
 }
 
 async function loadCategories() {
-  if (!categoriesContainer) return;
-  categoriesContainer.innerHTML = '';
-
   for (const cat of CATEGORIES) {
     const movies = await fetchCategoryMovies(cat.query);
     if (!movies.length) continue;
@@ -144,7 +109,7 @@ async function loadCategories() {
       <div class="category-scroller">
         ${movies.map(m => `
           <div class="movie" data-id="${m.imdbID}">
-            <img src="${m.Poster !== 'N/A' ? m.Poster : 'https://via.placeholder.com/150x220'}">
+            <img src="${m.Poster !== 'N/A' ? m.Poster : 'https://via.placeholder.com/150x220'}" />
             <div class="movie-info">
               <strong>${m.Title}</strong>
               <div>${m.Year}</div>
@@ -165,31 +130,27 @@ searchBtn.addEventListener('click', () => {
   if (q) fetchMovies(q);
 });
 
-input.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    const q = input.value.trim();
-    if (q) fetchMovies(q);
-  }
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') searchBtn.click();
 });
 
 sortSelect.addEventListener('change', () => {
-  if (!state.movies.length) return;
-  displayMovies(sortMovies(state.movies, sortSelect.value));
+  if (state.movies.length) {
+    displayMovies(sortMovies(state.movies, sortSelect.value));
+  }
 });
 
-// ---------- Auto-search add-on (FIXED) ----------
+// ---------- Auto-search (285ms debounce) ----------
 let debounceTimer;
 
 input.addEventListener('input', () => {
   clearTimeout(debounceTimer);
-
-  const q = input.value.trim();
-  if (q.length < 2) return;
+  if (input.value.trim().length < 2) return;
 
   debounceTimer = setTimeout(() => {
     searchBtn.click();
-  }, 450);
+  }, 285);
 });
 
-// Load categories
+// Load categories on page load
 window.addEventListener('DOMContentLoaded', loadCategories);
