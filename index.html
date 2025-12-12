@@ -5,32 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Movie Search App</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Custom favicon -->
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
+
 <body>
-
   <header>
-      <nav class="main-nav">
-    <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#results">Browse Movies</a></li>
-    </ul>
-  </nav>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#results">Browse Movies</a></li>
+      </ul>
+    </nav>
 
-  <p class="intro">Welcome! Search for a movie below.</p>
+    <p class="intro">Welcome! Search for a movie below.</p>
 
+    <!-- ✅ IDs added (search-input, search-btn, sort-order) -->
     <div class="search-bar">
       <input id="search-input" type="text" placeholder="Search for a movie..." />
       <button id="search-btn">Search</button>
 
-      <!-- sort dropdown -->
       <select id="sort-order">
-        <!-- Year-based sorting -->
         <option value="year-desc">Newest → Oldest</option>
         <option value="year-asc">Oldest → Newest</option>
-        <!-- Title-based sorting -->
         <option value="title-asc">Title A → Z</option>
         <option value="title-desc">Title Z → A</option>
       </select>
@@ -40,27 +36,26 @@
   </header>
 
   <main>
-  <!-- Category rows (Netflix-style) -->
-  <section id="category-rows" class="category-rows"></section>
+    <!-- ✅ containers your JS needs -->
+    <section id="category-rows" class="category-rows"></section>
+    <section class="movies" id="results"></section>
+  </main>
 
-  <!-- Search results grid (still 2x3) -->
-  <section class="movies" id="results"></section>
-</main>
-
-<!-- MODAL (you can keep or remove if unused) -->
-<div id="movie-modal" class="modal hidden">
-  <div class="modal-content">
-    <span id="close-modal">&times;</span>
-
-    <img id="modal-poster" />
-    <h2 id="modal-title"></h2>
-    <p id="modal-year"></p>
-    <p id="modal-plot"></p>
+  <!-- Modal (optional) -->
+  <div id="movie-modal" class="modal hidden">
+    <div class="modal-content">
+      <span id="close-modal">&times;</span>
+      <img id="modal-poster" />
+      <h2 id="modal-title"></h2>
+      <p id="modal-year"></p>
+      <p id="modal-plot"></p>
+    </div>
   </div>
-</div>
 
- <script>
-  window.apiKey = 'b99960a';   // your actual OMDb key
-</script>
+  <script>
+    window.apiKey = 'b99960a';
+  </script>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
