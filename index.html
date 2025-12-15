@@ -6,8 +6,11 @@
   <title>Movie Search App</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <!-- ✅ Make sure script loads after DOM -->
-  <script src="script.js"</script>
+
+  <script>
+    window.apiKey = "b99960a";
+  </script>
+  <script src="script.js" defer></script>
 </head>
 
 <body>
@@ -20,46 +23,41 @@
     </nav>
 
     <p class="intro">Welcome! Search for a movie below.</p>
-<!-- ✅ Search input and button -->
-<form id="search-form" class="search-bar">
-  <input
-    id="search-input"
-    type="text"
-    placeholder="Search for a movie..."
-    autocomplete="off"
-  />
-  <button id="search-btn" type="submit">Search</button>
 
-  <select id="sort-order">
-    <option value="year-desc">Newest → Oldest</option>
-    <option value="year-asc">Oldest → Newest</option>
-    <option value="title-asc">Title A → Z</option>
-    <option value="title-desc">Title Z → A</option>
-  </select>
-</form>
-    
-  <div id="suggestions" class="suggestions"></div>
- </header>
+    <form id="search-form" class="search-bar">
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Search for a movie..."
+        autocomplete="off"
+      />
+      <button id="search-btn" type="submit">Search</button>
 
-<main>
-  <section id="category-rows" class="category-rows"></section>
-  <section class="movies" id="results"></section>
-</main>
+      <select id="sort-order">
+        <option value="year-desc">Newest → Oldest</option>
+        <option value="year-asc">Oldest → Newest</option>
+        <option value="title-asc">Title A → Z</option>
+        <option value="title-desc">Title Z → A</option>
+      </select>
+    </form>
+
+    <div id="suggestions" class="suggestions"></div>
+  </header>
+
+  <main>
+    <section id="category-rows" class="category-rows"></section>
+    <section class="movies" id="results"></section>
+  </main>
 
   <!-- Modal -->
   <div id="movie-modal" class="modal hidden">
     <div class="modal-content">
       <span id="close-modal">&times;</span>
-      <img id="modal-poster" />
+      <img id="modal-poster" alt="Movie poster" />
       <h2 id="modal-title"></h2>
       <p id="modal-year"></p>
       <p id="modal-plot"></p>
     </div>
-<script>
-  window.apiKey = "b99960a";
-</script>
+  </div>
 </body>
 </html>
-
-
-  
