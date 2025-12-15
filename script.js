@@ -143,9 +143,12 @@ window.addEventListener("DOMContentLoaded", () => {
   // Submit (clicking Search OR pressing Enter)
   const form = document.getElementById("search-form");
   form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    performSearch();
-  });
+  e.preventDefault();
+  const query = input.value.trim();
+  if (query) {
+    fetchMovies(query);
+  }
+});
 
   // Sorting (re-sort whatever is currently loaded)
   sortSelect.addEventListener("change", () => {
@@ -161,10 +164,12 @@ window.addEventListener("DOMContentLoaded", () => {
     if (input.value.trim().length < 2) return;
 
     debounceTimer = setTimeout(() => {
-      performSearch();
-    }, 285);
-  });
-
+  const query = input.value.trim();
+  if (query) {
+    fetchMovies(query);
+  }
+}, 285);
+    
   // Load categories
   loadCategories();
 });
