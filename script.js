@@ -4,15 +4,13 @@ const apiKey = typeof window.apiKey !== 'undefined' ? window.apiKey : 'b99960a';
 // DOM references
 const results = document.getElementById('results');
 const input = document.getElementById('search-input');
-const searchBtn = document.getElementById('search-btn');
 const searchForm = document.getElementById('search-form');
 const sortSelect = document.getElementById('sort-order');
 const categoriesContainer = document.getElementById('category-rows');
 
 // App state
 let state = {
-  movies: [],
-  lastQuery: ''
+  movies: []
 };
 
 // Categories
@@ -53,7 +51,7 @@ function attachMovieClickHandlers(scope) {
 
 // ---------- Display search results ----------
 function displayMovies(list) {
-  if (!list.length) {
+  if (!list || list.length === 0) {
     results.innerHTML = '<p>No results found.</p>';
     return;
   }
@@ -73,36 +71,42 @@ function displayMovies(list) {
 
 // ---------- Fetch search ----------
 async function fetchMovies(query) {
-  results.innerHTML = '<p>Loading...</p>';
+  results.innerHTML = '<p>Loading…</p>';
   try {
     const res = await fetch(
       `https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${apiKey}`
     );
     const data = await res.json();
-    console.log("OMDb data:", data); // 🔍 Debug
+    console.log("OMDb data:", data);
 
     if (data.Response === 'True') {
       state.movies = data.Search;
       displayMovies(sortMovies(state.movies, sortSelect.value));
     } else {
-      results.innerHTML = '<p>No results found.</p>';
+      results.innerHTML = `<p>${data.Error || 'No results found.'}</p>`;
     }
   } catch (error) {
-    console.error("Fetch failed:", error); // 🔍 Debug
+    console.error("Fetch failed:", error);
     results.innerHTML = '<p>Error fetching data.</p>';
   }
 }
 
 // ---------- Categories ----------
 async function fetchCategoryMovies(query) {
-  const res = await fetch(
-    `https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${apiKey}`
-  );
-  const data = await res.json();
-  return data.Response === 'True' ? data.Search.slice(0, 10) : [];
+  try {
+    const res = await fetch(
+      `https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${apiKey}`
+    );
+    const data = await res.json();
+    return data.Response === 'True' ? data.Search.slice(0, 10) : [];
+  } catch (error) {
+    console.error("Category fetch error:", error);
+    return [];
+  }
 }
 
 async function loadCategories() {
+  categoriesContainer.innerHTML = ""; // clear if reloading
   for (const cat of CATEGORIES) {
     const movies = await fetchCategoryMovies(cat.query);
     if (!movies.length) continue;
@@ -131,45 +135,18 @@ async function loadCategories() {
 }
 
 // ---------- Events ----------
-
-// Make sure these exist before adding listeners
 window.addEventListener("DOMContentLoaded", () => {
-  // Guard: if IDs are missing, stop and tell you in console
-  if (!results || !input || !searchBtn || !sortSelect || !categoriesContainer) {
-    console.error("Missing required HTML IDs. Check search-form/search-input/search-btn/sort-order/results/category-rows.");
-    return;
-  }
+  searchForm.addEventListener("submit", e => {
+    e.preventDefault();
+    const query = input.value.trim();
+    if (query) fetchMovies(query);
+  });
 
-  // Submit (clicking Search OR pressing Enter)
-  const form = document.getElementById("search-form");
-  form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const query = input.value.trim();
-  if (query) {
-    fetchMovies(query);
-  }
-});
-
-  // Sorting (re-sort whatever is currently loaded)
   sortSelect.addEventListener("change", () => {
     if (state.movies.length) {
       displayMovies(sortMovies(state.movies, sortSelect.value));
     }
   });
 
-  // Auto-search (debounce)
-  let debounceTimer;
-  input.addEventListener("input", () => {
-    clearTimeout(debounceTimer);
-    if (input.value.trim().length < 2) return;
-
-    debounceTimer = setTimeout(() => {
-  const query = input.value.trim();
-  if (query) {
-    fetchMovies(query);
-  }
-}), 285);
-    
-  // Load categories
   loadCategories();
 });
