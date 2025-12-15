@@ -5,7 +5,7 @@ const apiKey = typeof window.apiKey !== 'undefined' ? window.apiKey : 'b99960a';
 const results = document.getElementById('results');
 const input = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
-const searchForm + document.getElementById('search-form');
+const searchForm = document.getElementById('search-form');
 const sortSelect = document.getElementById('sort-order');
 const categoriesContainer = document.getElementById('category-rows');
 
