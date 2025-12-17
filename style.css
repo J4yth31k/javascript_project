@@ -312,15 +312,14 @@ html {
   font-size: 1.4rem;
 }
 
-/* movies inside each category: centered grid */
 .category-scroller {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 5 columns */
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: 20px;
   max-width: 1000px;
   margin: 0 auto;
   padding: 10px;
-  justify-items: center; /* centers each item in its cell */
+  justify-items: center;
 }
 
 .category-scroller .movie {
@@ -343,4 +342,34 @@ html {
 
   max-width: 660px;
   margin: 0 auto;
+}
+
+/* ✅ Make search bar responsive */
+.search-bar {
+  flex-wrap: wrap;
+  padding: 0 12px;
+}
+
+.search-bar input {
+  width: min(420px, 100%);
+  flex: 1 1 240px;
+}
+
+.search-bar button,
+.search-bar select {
+  flex: 0 1 auto;
+}
+
+@media (max-width: 768px) {
+  .category-scroller {
+    grid-template-columns: repeat(3, minmax(110px, 1fr));
+    gap: 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  .category-scroller {
+    grid-template-columns: repeat(2, minmax(110px, 1fr));
+    gap: 12px;
+  }
 }
